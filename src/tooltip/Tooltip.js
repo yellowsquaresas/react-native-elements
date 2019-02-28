@@ -70,8 +70,11 @@ class Tooltip extends React.PureComponent {
 
     return {
       position: "absolute",
-      left: x,
-      top: y,
+      left:
+        xOffset +
+        getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
+        width / 2,
+      top: y + (this.props.addYOffset ? this.props.addYOffset : 0),
       width,
       height,
       backgroundColor,
@@ -95,7 +98,7 @@ class Tooltip extends React.PureComponent {
       <View
         style={{
           position: "absolute",
-          top: pastMiddleLine ? yOffset - 13 : yOffset + elementHeight - 2,
+          top: pastMiddleLine ? yOffset - 13 + (this.props.addYOffset ? this.props.addYOffset : 0) : yOffset + elementHeight - 2,
           left:
             xOffset +
             getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
@@ -191,7 +194,7 @@ class Tooltip extends React.PureComponent {
           onRequestClose={onClose}
         >
           <TouchableOpacity
-            style={styles.container(withOverlay)}
+            style={{ ...styles.container(withOverlay), ...this.props.overlayStyle }}
             onPress={this.toggleTooltip}
             activeOpacity={1}
           >
@@ -236,10 +239,10 @@ Tooltip.defaultProps = {
 
 const styles = {
   container: withOverlay => ({
-    backgroundColor: withOverlay ? "rgba(250, 250, 250, 0.70)" : "transparent",
+    backgroundColor: withOverlay ? "rgba(255, 255, 255, 0.50)" : "transparent",
     flex: 1
   })
 };
 
 export { Tooltip };
-export default withTheme(Tooltip, 'Tooltip');
+export default withTheme(Tooltip, "Tooltip");
