@@ -1,22 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TouchableOpacity, Modal, View } from 'react-native';
+import React from "react";
+import PropTypes from "prop-types";
+import { TouchableOpacity, Modal, View } from "react-native";
+import { observer, inject } from "mobx-react";
+import { ViewPropTypes, withTheme } from "../config";
+import { ScreenWidth, ScreenHeight, isIOS } from "../helpers";
 
-import { ViewPropTypes, withTheme } from '../config';
-import { ScreenWidth, ScreenHeight, isIOS } from '../helpers';
-
-import Triangle from './Triangle';
+import Triangle from "./Triangle";
 import getTooltipCoordinate, {
-  getElementVisibleWidth,
-} from './getTooltipCoordinate';
+  getElementVisibleWidth
+} from "./getTooltipCoordinate";
 
+@inject("globalStore") @observer
 class Tooltip extends React.PureComponent {
   state = {
     isVisible: false,
     yOffset: 0,
     xOffset: 0,
     elementWidth: 0,
-    elementHeight: 0,
+    elementHeight: 0
   };
 
   renderedElement;
@@ -52,7 +53,7 @@ class Tooltip extends React.PureComponent {
       backgroundColor,
       width,
       withPointer,
-      containerStyle,
+      containerStyle
     } = this.props;
 
     const { x, y } = getTooltipCoordinate(
@@ -68,20 +69,23 @@ class Tooltip extends React.PureComponent {
     );
 
     return {
-      position: 'absolute',
-      left: x,
-      top: y,
+      position: "absolute",
+      left:
+        xOffset +
+        getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
+        width / 2,
+      top: y + (this.props.addYOffset ? this.props.addYOffset : 0),
       width,
       height,
       backgroundColor,
       // default styles
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       flex: 1,
       borderRadius: 10,
       padding: 10,
-      ...containerStyle,
+      ...containerStyle
     };
   };
 
@@ -93,12 +97,12 @@ class Tooltip extends React.PureComponent {
     return (
       <View
         style={{
-          position: 'absolute',
-          top: pastMiddleLine ? yOffset - 13 : yOffset + elementHeight - 2,
+          position: "absolute",
+          top: pastMiddleLine ? yOffset - 13 + (this.props.addYOffset ? this.props.addYOffset : 0) : yOffset + elementHeight - 2,
           left:
             xOffset +
             getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
-            7.5,
+            7.5
         }}
       >
         <Triangle
@@ -112,8 +116,9 @@ class Tooltip extends React.PureComponent {
   renderContent = withTooltip => {
     const { popover, withPointer, toggleOnPress, highlightColor } = this.props;
 
-    if (!withTooltip)
+    if (!withTooltip) {
       return this.wrapWithPress(toggleOnPress, this.props.children);
+    }
 
     const { yOffset, xOffset, elementWidth, elementHeight } = this.state;
     const tooltipStyle = this.getTooltipStyle();
@@ -121,13 +126,13 @@ class Tooltip extends React.PureComponent {
       <View>
         <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: yOffset,
             left: xOffset,
             backgroundColor: highlightColor,
-            overflow: 'visible',
+            overflow: "visible",
             width: elementWidth,
-            height: elementHeight,
+            height: elementHeight
           }}
         >
           {this.props.children}
@@ -147,28 +152,30 @@ class Tooltip extends React.PureComponent {
 
   getElementPosition = () => {
     this.renderedElement &&
-      this.renderedElement.measure(
-        (
-          frameOffsetX,
-          frameOffsetY,
-          width,
-          height,
-          pageOffsetX,
-          pageOffsetY
-        ) => {
-          this.setState({
-            xOffset: pageOffsetX,
-            yOffset: pageOffsetY,
-            elementWidth: width,
-            elementHeight: height,
-          });
-        }
-      );
+    this.renderedElement.measure(
+      (
+        frameOffsetX,
+        frameOffsetY,
+        width,
+        height,
+        pageOffsetX,
+        pageOffsetY
+      ) => {
+        this.setState({
+          xOffset: pageOffsetX,
+          yOffset: pageOffsetY,
+          elementWidth: width,
+          elementHeight: height
+        });
+      }
+    );
   };
 
   render() {
     const { isVisible } = this.state;
     const { onClose, withOverlay, onOpen } = this.props;
+
+    this.props.globalStore.tradeScreenStore.setToggleActiveTooltip(this.toggleTooltip);
 
     return (
       <View
@@ -187,7 +194,7 @@ class Tooltip extends React.PureComponent {
           onRequestClose={onClose}
         >
           <TouchableOpacity
-            style={styles.container(withOverlay)}
+            style={{ ...styles.container(withOverlay), ...this.props.overlayStyle }}
             onPress={this.toggleTooltip}
             activeOpacity={1}
           >
@@ -212,28 +219,30 @@ Tooltip.propTypes = {
   onOpen: PropTypes.func,
   withOverlay: PropTypes.bool,
   backgroundColor: PropTypes.string,
-  highlightColor: PropTypes.string,
+  highlightColor: PropTypes.string
 };
 
 Tooltip.defaultProps = {
   withOverlay: true,
-  highlightColor: 'transparent',
+  highlightColor: "transparent",
   withPointer: true,
   toggleOnPress: true,
   height: 40,
   width: 150,
   containerStyle: {},
-  backgroundColor: '#617080',
-  onClose: () => {},
-  onOpen: () => {},
+  backgroundColor: "#617080",
+  onClose: () => {
+  },
+  onOpen: () => {
+  }
 };
 
 const styles = {
   container: withOverlay => ({
-    backgroundColor: withOverlay ? 'rgba(250, 250, 250, 0.70)' : 'transparent',
-    flex: 1,
-  }),
+    backgroundColor: withOverlay ? "rgba(255, 255, 255, 0.50)" : "transparent",
+    flex: 1
+  })
 };
 
 export { Tooltip };
-export default withTheme(Tooltip, 'Tooltip');
+export default withTheme(Tooltip, "Tooltip");
