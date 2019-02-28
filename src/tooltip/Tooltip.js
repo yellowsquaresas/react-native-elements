@@ -68,13 +68,17 @@ class Tooltip extends React.PureComponent {
       withPointer
     );
 
+    const pastMiddleLine = yOffset > y;
+    const direction = (pastMiddleLine ? 1 : -1);
+    const top = y + (this.props.addYOffset ? this.props.addYOffset * direction : 0);
+
     return {
       position: "absolute",
       left:
         xOffset +
         getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
         width / 2,
-      top: y + (this.props.addYOffset ? this.props.addYOffset : 0),
+      top: top,
       width,
       height,
       backgroundColor,
@@ -93,12 +97,14 @@ class Tooltip extends React.PureComponent {
     const { yOffset, xOffset, elementHeight, elementWidth } = this.state;
     const { backgroundColor, pointerColor } = this.props;
     const pastMiddleLine = yOffset > tooltipY;
+    const direction = (pastMiddleLine ? 1 : -1);
+    const decay = (this.props.addYOffset ? this.props.addYOffset : 0);
 
     return (
       <View
         style={{
           position: "absolute",
-          top: pastMiddleLine ? yOffset - 13 + (this.props.addYOffset ? this.props.addYOffset : 0) : yOffset + elementHeight - 2,
+          top: pastMiddleLine ? yOffset - 13 + decay : yOffset + elementHeight - 2 - decay,
           left:
             xOffset +
             getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
