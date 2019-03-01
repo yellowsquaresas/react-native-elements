@@ -11,7 +11,7 @@ import getTooltipCoordinate, {
 } from "./getTooltipCoordinate";
 
 @inject("globalStore") @observer
-class Tooltip extends React.PureComponent {
+class Tooltip extends React.Component {
   state = {
     isVisible: false,
     yOffset: 0,
