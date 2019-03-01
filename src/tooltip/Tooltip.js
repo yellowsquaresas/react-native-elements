@@ -71,13 +71,16 @@ class Tooltip extends React.Component {
     const pastMiddleLine = yOffset > y;
     const direction = (pastMiddleLine ? 1 : -1);
     const top = y + (this.props.addYOffset ? this.props.addYOffset * direction : 0);
+    let left = xOffset +
+      getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
+      width / 2;
+    if (left < 0 || left + width > ScreenWidth) {
+      left = x;
+    }
 
     return {
       position: "absolute",
-      left:
-        xOffset +
-        getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
-        width / 2,
+      left: left,
       top: top,
       width,
       height,
