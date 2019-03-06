@@ -201,7 +201,7 @@ class Tooltip extends React.Component {
       >
         {this.renderContent(false)}
         <Modal
-          animationType="fade"
+          animationType="none"
           visible={isVisible}
           transparent
           onDismiss={onClose}
