@@ -75,8 +75,14 @@ class Tooltip extends React.Component {
       getElementVisibleWidth(elementWidth, xOffset, ScreenWidth) / 2 -
       width / 2;
     if (left < 0 || left + width > ScreenWidth) {
-      left = x;
+      //FIXME this won't work in general cases, but more thanok for our usage
+      if (width >= 0.94 * ScreenWidth) {
+        left = (ScreenWidth - width) / 2;
+      } else {
+        left = x;
+      }
     }
+
 
     return {
       position: "absolute",
