@@ -1,6 +1,7 @@
 ---
-id: input
+id: version-1.1.0-input
 title: Input
+original_id: input
 ---
 
 Inputs allow users to enter text into a UI. They typically appear in forms and

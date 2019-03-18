@@ -1,6 +1,7 @@
 ---
-id: text
+id: version-1.1.0-text
 title: Text
+original_id: text
 ---
 
 Text displays words and characters at various sizes.

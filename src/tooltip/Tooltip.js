@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { TouchableOpacity, Modal, View } from "react-native";
+import { TouchableOpacity, Modal, View, StatusBar } from "react-native";
 import { observer, inject } from "mobx-react";
 import { ViewPropTypes, withTheme } from "../config";
 import { ScreenWidth, ScreenHeight, isIOS } from "../helpers";
@@ -178,7 +178,9 @@ class Tooltip extends React.Component {
       ) => {
         this.setState({
           xOffset: pageOffsetX,
-          yOffset: pageOffsetY,
+          yOffset: isIOS
+            ? pageOffsetY
+            : pageOffsetY - StatusBar.currentHeight,
           elementWidth: width,
           elementHeight: height
         });

@@ -1,6 +1,7 @@
 ---
-id: checkbox
+id: version-1.1.0-checkbox
 title: CheckBox
+original_id: checkbox
 ---
 
 CheckBoxes allow users to complete tasks that involve making choices such as
