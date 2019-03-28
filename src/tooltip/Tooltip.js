@@ -39,7 +39,9 @@ class Tooltip extends React.Component {
       return (
         <TouchableOpacity onPress={() => {
           this.toggleTooltip();
-          this.props.onPressMoreAction();
+          if (this.props.onPressMoreAction) {
+            this.props.onPressMoreAction();
+          }
         }} activeOpacity={1}>
           {children}
         </TouchableOpacity>
