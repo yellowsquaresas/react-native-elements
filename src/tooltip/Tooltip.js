@@ -37,7 +37,10 @@ class Tooltip extends React.Component {
   wrapWithPress = (toggleOnPress, children) => {
     if (toggleOnPress) {
       return (
-        <TouchableOpacity onPress={this.toggleTooltip} activeOpacity={1}>
+        <TouchableOpacity onPress={() => {
+          this.toggleTooltip();
+          this.props.onPressMoreAction();
+        }} activeOpacity={1}>
           {children}
         </TouchableOpacity>
       );
@@ -178,7 +181,9 @@ class Tooltip extends React.Component {
       ) => {
         this.setState({
           xOffset: pageOffsetX,
-          yOffset: pageOffsetY,
+          yOffset: isIOS
+            ? pageOffsetY
+            : pageOffsetY - StatusBar.currentHeight,
           elementWidth: width,
           elementHeight: height
         });
